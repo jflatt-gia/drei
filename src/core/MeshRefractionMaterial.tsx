@@ -64,11 +64,12 @@ export function MeshRefractionMaterial({
 
   useLayoutEffect(() => {
     // Get the geometry of this materials parent
-    const geometry = (material.current as any)?.__r3f?.parent?.object?.geometry
+    const geometry = (material.current as any)?.__r3f?.parent?.object?.geometry.clone();
+    const geometry_ni = geometry.index ? geometry.toNonIndexed() : geometry;
     // Update the BVH
-    if (geometry) {
+    if (geometry_ni) {
       ;(material.current as any).bvh = new MeshBVHUniformStruct()
-      ;(material.current as any).bvh.updateFrom(new MeshBVH(geometry.clone().toNonIndexed(), { strategy: SAH }))
+      ;(material.current as any).bvh.updateFrom(new MeshBVH(geometry_ni, { strategy: SAH }))
     }
   }, [])
 
